@@ -1,4 +1,5 @@
 # Code Health Meter
+<center><b>Not completed</b></center>
 
 ## Overview
 This project is a simple tool for measuring the health of your JavaScript code using various static code analysis metrics. These metrics help identify characteristics of the code that indicate potential problems or patterns such as redundancy, excessive complexity, or AI-generated code.
