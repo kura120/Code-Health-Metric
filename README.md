@@ -47,17 +47,13 @@ This will print out the results of the metrics on your code.
 
 ## Additional Features
 
-- **Cyclomatic Complexity**: Helps identify overly complex functions that could benefit from refactoring.
-- **Halstead Complexity**: Useful for measuring the difficulty and effort required to understand the code.
-- **AI Pattern Detection**: Detects signs that code might be AI-generated based on known patterns.
-- **Redundancy Detection**: Identifies duplicate code, which can lead to unnecessary maintenance effort.
-- **Folder Structure Analysis**: Helps detect overly deep or fragmented file structures that may complicate the project layout.
+@ TODO
 
 ## Future Improvements
 
 - Add more advanced metrics such as **Code Duplication Detection** or **Code Smell Analysis**.
 - Improve AI pattern detection by incorporating machine learning models.
-- Integrate with continuous integration (CI) tools like GitHub Actions or CircleCI to automatically analyze code on every commit.
+- Integrate with continuous integration (CI) tools like GitHub Actions or CircleCI to automatically analyze code on every commit. --> on GitHub projects
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
