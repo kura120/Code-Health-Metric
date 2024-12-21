@@ -32,35 +32,32 @@ try {
         formattingScore: checkFormatting(code),
     };
 
-    const normalizedScores = {
-        cyclomaticComplexity: 10 - results.cCResults, // Lower is better
-        halsteadV: results.hCResults.V / 1000, // Normalize Halstead Volume, scale down the number to fit 0-10
-        aiDetection: results.aiResults === 'Human generated' ? 1 : 0, // Human code is better
-        redundancyDetection: results.redResults === 'No redundancy detected' ? 1 : 0, // No redundancy is better
-        folderStructureDepth: Math.max(0, 10 - results.depthResults), // Normalize structure depth
-        functionSizeIssues: results.fSizeResults.oversizedFunctions === 0 ? 1 : 0, // No oversized function is better
-        lineLengthIssues: results.lLengthResults.longLines === 0 ? 1 : 0, // No long lines is better
-        variableNamingIssues: results.vCheckResults.badNames === 0 ? 1 : 0, // No bad names is better
-        indentationScore: Math.max(0, Math.min(1, results.indentationScore)), // Normalize to 0-1
-        formattingScore: results.formattingScore >= 0 ? 1 : 0, // Positive score is better
-    };
+    const cyclomaticScore = Math.max(0, Math.min(10, 10 - Math.min(results.cCResults / 2, 10)));
+    const halsteadScore = Math.max(0, Math.min(10, 10 - (results.hCResults.V / 2000)));
+    const aiDetectionScore = results.aiResults === 'Human generated' ? 10 : 0;
+    const redundancyDetectionScore = results.redResults === 'No redundancy detected' ? 10 : 0;
+    const folderStructureScore = Math.max(0, Math.min(10, 10 - results.depthResults));
+    const functionSizeScore = results.fSizeResults.oversizedFunctions === 0 ? 10 : 0;
+    const lineLengthScore = results.lLengthResults.longLines === 0 ? 10 : 0;
+    const variableNamingScore = results.vCheckResults.badNames === 0 ? 10 : 0;
+    const indentationScore = Math.max(0, Math.min(10, results.indentationScore * 10));
+    const formattingScore = results.formattingScore >= 0 ? 10 : 0;
 
-    // results
     const totalScore = (
-        normalizedScores.cyclomaticComplexity * 0.1 +
-        normalizedScores.halsteadV * 0.2 +
-        normalizedScores.aiDetection * 0.1 +
-        normalizedScores.redundancyDetection * 0.1 +
-        normalizedScores.folderStructureDepth * 0.05 +
-        normalizedScores.functionSizeIssues * 0.05 +
-        normalizedScores.lineLengthIssues * 0.05 +
-        normalizedScores.variableNamingIssues * 0.05 +
-        normalizedScores.indentationScore * 0.05 +
-        normalizedScores.formattingScore * 0.05
+        cyclomaticScore * 0.15 +
+        halsteadScore * 0.2 +
+        aiDetectionScore * 0.1 +
+        redundancyDetectionScore * 0.1 +
+        folderStructureScore * 0.1 +
+        functionSizeScore * 0.1 +
+        lineLengthScore * 0.1 +
+        variableNamingScore * 0.05 +
+        indentationScore * 0.05 +
+        formattingScore * 0.05
     );
 
-    const finalScore = Math.min(10, Math.max(0, totalScore));
-    console.log("Total Code Quality Score:", finalScore.toFixed(2));
+    console.log("Total Code Quality Score:", totalScore.toFixed(2));
+
 } catch (error) {
     console.error('Error analyzing code:', error.message);
 }
