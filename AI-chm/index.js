@@ -1,21 +1,46 @@
+const fs = require('fs');
+const path = require('path');
+const { cyclomaticComplexity, halsteadComplexity } = require('./metrics/complexities');
+const aiPatternDetection = require('./metrics/detectors/aiDetection');
+const detectRedundancy = require('./metrics/detectors/redundancyDetection');
+const analyzeFolderStructure = require('./metrics/analysis/fileStructureAnalysis');
 const parseCode = require('./utils/parseCode');
-const cyclomaticComplexity = require('./metrics/cyclomaticComplexity');
-const halsteadComplexity = require('./metrics/halsteadComplexity');
-const aiPatternDetection = require('./metrics/aiDetection');
-const detectRedundancy = require('./metrics/redundancyDetection');
-const analyzeFolderStructure = require('./metrics/fileStructureAnalysis');
+const {
+    checkFunctionSize,
+    checkLineLength,
+    checkVariable,
+    checkIndentation,
+    checkFormatting,
+} = require('./metrics/codeChecks');
 
-const filePath = './sampleCode.js'; // Example code file
+const codeFilePath = path.join(__dirname, '../exampleProject/sampleCode.js');
+const folderPath = path.join(__dirname, '../exampleProject'); // root folder for folder structure analysis
 
-const code = parseCode(filePath);
-const cc = cyclomaticComplexity(code);
-const halstead = halsteadComplexity(code);
-const aiDetectionResult = aiPatternDetection(code);
-const redundancyResult = detectRedundancy(code);
-const folderDepth = analyzeFolderStructure('./');
+try {
+    const ast = parseCode(codeFilePath);
 
-console.log(`Cyclomatic Complexity: ${cc}`);
-console.log(`Halstead Complexity: ${JSON.stringify(halstead)}`);
-console.log(`AI Detection: ${aiDetectionResult}`);
-console.log(`Redundancy Detection: ${redundancyResult}`);
-console.log(`Folder Structure Depth: ${folderDepth}`);
+    const cyclomaticComplexity = cyclomaticComplexity(ast);
+    const halsteadComplexity = halsteadComplexity(ast);
+    const aiDetectionResult = aiPatternDetection(code);
+    const redundancyResult = detectRedundancy(code);
+    const folderDepth = analyzeFolderStructure(folderPath);
+    const functionSizeResults = checkFunctionSize(code);
+    const lineLengthResults = checkLineLength(code);
+    const variableCheckResults = checkVariable(code);
+    const indentationScore = checkIndentation(code);
+    const formattingScore = checkFormatting(code);
+
+    // results
+    console.log('Cyclomatic Complexity:', cyclomaticComplexity);
+    console.log('Halstead Complexity:', halsteadComplexity);
+    console.log('AI Detection:', aiDetectionResult);
+    console.log('Redundancy Detection:', redundancyResult);
+    console.log('Folder Structure Depth:', folderDepth);
+    console.log('Function Size Issues:', functionSizeResults);
+    console.log('Line Length Issues:', lineLengthResults);
+    console.log('Variable Naming Issues:', variableCheckResults);
+    console.log('Indentation Score:', indentationScore);
+    console.log('Formatting Score:', formattingScore);
+} catch (error) {
+    console.error('Error analyzing code:', error.message);
+}
